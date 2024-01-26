@@ -1,5 +1,6 @@
 use rppal::i2c::I2c;
-// use std::{thread, time};
+use rppal::gpio::Gpio;
+use std::{thread, time};
 
 fn char_to_led(alpha_num: char) -> u8 {
     match alpha_num {
@@ -47,4 +48,20 @@ fn main() {
         i += 1;
     }
     let _ = smbus.block_write(0x00, &display);
+
+    let gpio17 = Gpio::new(); // IR mid left
+    let gpio18 = Gpio::new(); // IR right
+    let gpio22 = Gpio::new(); // IR mid right
+    let gpio23 = Gpio::new(); // IR left
+    let gpio27 = Gpio::new(); // IR mid
+    let pin17 = gpio17.expect("GPIO17 no good").get(17).expect("GPIO17 in use");
+    let pin18 = gpio18.expect("GPIO18 no good").get(18).expect("GPIO18 in use");
+    let pin22 = gpio22.expect("GPIO22 no good").get(22).expect("GPIO22 in use");
+    let pin23 = gpio23.expect("GPIO23 no good").get(23).expect("GPIO23 in use");
+    let pin27 = gpio27.expect("GPIO27 no good").get(27).expect("GPIO27 in use");
+
+    loop {
+        println!("17={} 18={} 22={} 23={} 27={}", pin17.read(), pin18.read(), pin22.read(), pin23.read(), pin27.read());
+        thread::sleep(time::Duration::from_millis(500));
+    }
 }
