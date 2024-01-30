@@ -48,10 +48,8 @@ pub fn write_display(smbus: &I2c, message: &str) {
     let mut display: [u8; 16] = [0; 16];
     let led_digit = [0, 2, 6, 8];
 
-    let mut i = 0;
-    for m in message.chars() {
+    for (i, m) in message.chars().enumerate() {
         display[led_digit[i]] = char_to_led(m);
-        i += 1;
     }
     smbus
         .block_write(0x00, &display)
